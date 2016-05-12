@@ -1,0 +1,30 @@
+---
+- name: Install first IPA server
+  hosts: masters
+  vars:
+    serverPackages:
+      - ipa-server
+      - ipa-server-dns
+      - firewalld
+    ipaDomain:
+      name: example.net
+      DMpw: MyeJv8Wjbf1LinKJ
+      adminPw: s6IbWEi0Ggv4nJEX
+  tasks:
+    - name: Update all packages
+      yum:
+        pkg: "*"
+        state: latest
+    - name: Install Server Packages
+      yum:
+        pkg: "{{item}}"
+        state: latest
+      with_items: "{{serverPackages}}"
+    - block:
+        - name: Configure first IPA master
+          command: "ipa-server-install --mkhomedir -n {{ipadomain.name}} -p {{ipaDomain.DMpw}} -a {{ipaDomain.adminPw}} --ip-address={{ansible_default_ipv4.address}} -U --setup-dns --forwarder=8.8.8.8 --forwarder=8.8.4.4 --no-host-dns --hostname={{inventory_hostname}}"
+      rescue:
+        - name: Undo failed installation
+          command: ipa-server-install --uninstall -U
+        
+...
