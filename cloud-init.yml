@@ -9,6 +9,7 @@
         dest: "{{ciFile}}"
         line: "preserve_hostname: 1"
         insertafter: "^ssh_pwauth:"
+      notify: reboot
     #- name: Check for preserve_hostname in cloud.cfg
     #  ignore_errors: true
     #  shell: "egrep -q '^preserve_hostname: 1' {{ciFile}}"
@@ -20,4 +21,11 @@
       copy:
         dest: /etc/hostname
         content: "{{inventory_hostname}}"
+      notify: reboot
+
+  handlers:
+    - name: reboot
+      shell: reboot
+      async: 1
+      poll: 0
 ...
