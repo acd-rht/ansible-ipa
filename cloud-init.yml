@@ -1,0 +1,18 @@
+---
+- name: Fix Amazon cloud-init drain bamage
+  hosts: all
+  vars:
+    ci-file: /etc/cloud/cloud.cfg
+  tasks:
+    - name: Check for preserve_hostname in cloud.cfg
+      ignore_errors: true
+      shell: "egrep -q '^preserve_hostname: 1' {{ci-file}}"
+      register: preserved
+    - name: Stop cloud-init from overwriting the hostname
+      when: {{ preserved.rc }} == 1
+      shell: "sed -i -r -e '/^ssh_pwauth/apreserve_hostname: 1' /etc/cloud/cloud.cfg"
+    - name: Set hostname
+      copy:
+        dest: /etc/hostname
+        content: "{{inventory_hostname}}"
+...
