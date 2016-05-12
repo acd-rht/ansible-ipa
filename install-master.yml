@@ -48,7 +48,7 @@
           lineinfile:
             dest: /etc/hosts
             insertafter: EOF
-            line: "{{inventory_hostname}} {{ansible_default_ipv4.address}}"
+            line: "{{ansible_default_ipv4.address}} {{inventory_hostname}}"
         - name: Configure first IPA master
           command: "ipa-server-install --mkhomedir -U >
           -r {{ipaDomain.realm}} -n {{ipaDomain.name}} >
