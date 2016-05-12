@@ -44,6 +44,11 @@
         state: enabled
       with_items: "{{ipaServices}}"
     - block:
+        - name: Configure hostname in /etc/hosts
+          lineinfile:
+            dest: /etc/hosts
+            insertafter: EOF
+            line: "{{inventory_hostname}} {{ansible_default_ipv4.address}}"
         - name: Configure first IPA master
           command: "ipa-server-install --mkhomedir -U >
           -r {{ipaDomain.realm}} -n {{ipaDomain.name}} >
