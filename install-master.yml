@@ -22,7 +22,7 @@
       with_items: "{{serverPackages}}"
     - block:
         - name: Configure first IPA master
-          command: "ipa-server-install --mkhomedir -n {{ipadomain.name}} -p {{ipaDomain.DMpw}} -a {{ipaDomain.adminPw}} --ip-address={{ansible_default_ipv4.address}} -U --setup-dns --forwarder=8.8.8.8 --forwarder=8.8.4.4 --no-host-dns --hostname={{inventory_hostname}}"
+          command: "ipa-server-install --mkhomedir -n {{ipaDomain.name}} -p {{ipaDomain.DMpw}} -a {{ipaDomain.adminPw}} --ip-address={{ansible_default_ipv4.address}} -U --setup-dns --forwarder=8.8.8.8 --forwarder=8.8.4.4 --no-host-dns --hostname={{inventory_hostname}}"
       rescue:
         - name: Undo failed installation
           command: ipa-server-install --uninstall -U
