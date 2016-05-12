@@ -40,7 +40,7 @@
       firewalld:
         service: "{{item}}"
         immediate: true
-        persistent: true
+        permanent: true
         state: enabled
       with_items: "{{ipaServices}}"
     - block:
