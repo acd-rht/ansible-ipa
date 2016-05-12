@@ -11,6 +11,16 @@
       realm: EXAMPLE.NET
       DMpw: MyeJv8Wjbf1LinKJ
       adminPw: s6IbWEi0Ggv4nJEX
+    ipaServices:
+      - http
+      - https
+      - ssh
+      - kerberos
+      - kpasswd
+      - ldap
+      - ldaps
+      - ntp
+      - dns
   tasks:
     - name: Update all packages
       yum:
@@ -21,6 +31,18 @@
         pkg: "{{item}}"
         state: latest
       with_items: "{{serverPackages}}"
+    - name: Start firewalld
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+    - name: Configure firewalld
+      firewalld:
+        service: "{{item}}"
+        immediate: true
+        persistent: true
+        state: enabled
+      with_items: "{{ipaServices}}"
     - block:
         - name: Configure first IPA master
           command: "ipa-server-install --mkhomedir -U >
