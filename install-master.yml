@@ -2,10 +2,6 @@
 - name: Install first IPA server
   hosts: masters
   vars:
-    serverPackages:
-      - ipa-server
-      - ipa-server-dns
-      - firewalld
     ipaDomain:
       name: example.net
       realm: EXAMPLE.NET
@@ -23,6 +19,8 @@
       - dns
     ipaStateFile: /var/lib/ipa/sysrestore/sysrestore.state
   tasks:
+    - name: Load distro-specific package lists
+      include_vars: roles/ipaSystem/vars/{{ansible_distribution}}-packages.yml
     - name: Update all packages
       yum:
         pkg: "*"
