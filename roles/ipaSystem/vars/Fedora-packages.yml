@@ -1,9 +1,9 @@
 ---
-- serverPackages:
-    - ipa-server
-    - ipa-server-dns
-    - firewalld
-- clientPackages:
-    - ipa-client
-    - ipa-admintools
+serverPackages:
+  - freeipa-server
+  - freeipa-server-dns
+  - freefirewalld
+clientPackages:
+  - freeipa-client
+  - freeipa-admintools
 ...
