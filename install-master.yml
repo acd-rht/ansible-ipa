@@ -54,7 +54,7 @@
             path: /root/cacert.p12
           register: cacert
         - name: Configure first IPA master
-          when: cacert.exists == false
+          when: cacert.stat.exists == false
           command: "ipa-server-install --mkhomedir -U >
           -r {{ipaDomain.realm}} -n {{ipaDomain.name}} >
           -p {{ipaDomain.DMpw}} -a {{ipaDomain.adminPw}} >
