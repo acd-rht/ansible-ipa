@@ -21,6 +21,7 @@
       - ldaps
       - ntp
       - dns
+    ipaStateFile: /var/lib/ipa/sysrestore/sysrestore.state
   tasks:
     - name: Update all packages
       yum:
@@ -51,10 +52,10 @@
             line: "{{ansible_default_ipv4.address}} {{inventory_hostname}}"
         - name: Check for previous install
           stat:
-            path: /root/cacert.p12
-          register: cacert
+            path: "{{ipaStateFile}}"
+          register: ipaState
         - name: Configure first IPA master
-          when: cacert.stat.exists == false
+          when: ipaState.stat.exists == false
           command: "ipa-server-install --mkhomedir -U >
           -r {{ipaDomain.realm}} -n {{ipaDomain.name}} >
           -p {{ipaDomain.DMpw}} -a {{ipaDomain.adminPw}} >
@@ -66,9 +67,9 @@
       rescue:
         - name: Undo failed installation
           command: ipa-server-install --uninstall -U
-        - name: Remove old cacert.p12
+        - name: Remove old IPA state file
           file:
-            dest: /root/cacert.p12
+            dest: "{{ipaStateFile}}"
             state: absent
         
 ...
