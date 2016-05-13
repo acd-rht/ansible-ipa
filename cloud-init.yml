@@ -15,6 +15,11 @@
         dest: /etc/hostname
         content: "{{inventory_hostname}}"
       notify: reboot
+    - name: Configure hostname in /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        insertafter: EOF
+        line: "{{ansible_default_ipv4.address}} {{inventory_hostname}}"
 
   handlers:
     - name: reboot
