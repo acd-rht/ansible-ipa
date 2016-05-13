@@ -49,7 +49,12 @@
             dest: /etc/hosts
             insertafter: EOF
             line: "{{ansible_default_ipv4.address}} {{inventory_hostname}}"
+        - name: Check for previous install
+          stat:
+            path: /root/cacert.p12
+          register: cacert
         - name: Configure first IPA master
+          when: cacert.exists == false
           command: "ipa-server-install --mkhomedir -U >
           -r {{ipaDomain.realm}} -n {{ipaDomain.name}} >
           -p {{ipaDomain.DMpw}} -a {{ipaDomain.adminPw}} >
