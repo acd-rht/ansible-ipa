@@ -4,3 +4,10 @@ ansible.example.net ansible_connection=local
 [masters]
 master.example.net
 
+[replicas]
+c7r.example.net
+f23r.example.net
+
+[ipaServers:children]
+masters
+replicas
