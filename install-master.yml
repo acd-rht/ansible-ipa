@@ -1,6 +1,6 @@
 ---
 - name: Install first IPA server
-  hosts: masters
+  hosts: ipaServers
   vars:
     ipaDomain:
       name: example.net
@@ -42,18 +42,18 @@
         permanent: true
         state: enabled
       with_items: "{{ipaServices}}"
+    - name: Configure hostname in /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        insertafter: EOF
+        line: "{{ansible_default_ipv4.address}} {{inventory_hostname}}"
+    - name: Check for previous install
+      stat:
+        path: "{{ipaStateFile}}"
+      register: ipaState
     - block:
-        - name: Configure hostname in /etc/hosts
-          lineinfile:
-            dest: /etc/hosts
-            insertafter: EOF
-            line: "{{ansible_default_ipv4.address}} {{inventory_hostname}}"
-        - name: Check for previous install
-          stat:
-            path: "{{ipaStateFile}}"
-          register: ipaState
         - name: Configure first IPA master
-          when: ipaState.stat.exists == false
+          when: ipaState.stat.exists == false and inventory_hostname in group['masters']
           command: "ipa-server-install --mkhomedir -U >
           -r {{ipaDomain.realm}} -n {{ipaDomain.name}} >
           -p {{ipaDomain.DMpw}} -a {{ipaDomain.adminPw}} >
