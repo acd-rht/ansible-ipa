@@ -5,8 +5,8 @@ ansible.example.net ansible_connection=local
 master.example.net
 
 [replicas]
-c7r.example.net
-f23r.example.net
+c7r.example.net ansible_user=centos
+f23r.example.net ansible_user=fedora
 
 [ipaServers:children]
 masters
